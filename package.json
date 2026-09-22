@@ -1,0 +1,39 @@
+{
+  "name": "typescriptawsapi",
+  "version": "1.0.0",
+  "description": "Small service containing aan API and database hosted on AWS",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd src/stacks/api && npm install",
+    "lint": "eslint ./src",
+    "test": "cd src/stacks/api && npm run test",
+    "synth": "cdk synth --all",
+    "deploy": "cdk deploy --all",
+    "genApi:types": "openapi-ts -i ./src/stacks/api/docs/openapi.yaml -o ./src/stacks/api/types -p @hey-api/typescript",
+    "genApi:docs": "redocly build-docs src/stacks/api/docs/openapi.yaml -o src/stacks/api/docs/api-docs.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CameronAP/TypeScriptAWSAPI.git"
+  },
+  "keywords": [],
+  "author": "Cameron Purvis",
+  "license": "MIT",
+  "homepage": "https://github.com/CameronAP/TypeScriptAWSAPI#readme",
+  "dependencies": {
+    "aws-cdk-lib": "2.270.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
+    "@redocly/cli": "2.53.3",
+    "@types/node": "^26.6.2",
+    "aws-cdk": "2.1142.0",
+    "eslint": "10.11.0",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.8",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.1"
+  }
+}

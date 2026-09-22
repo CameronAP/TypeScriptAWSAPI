@@ -1,0 +1,42 @@
+{
+  "name": "typescriptawsapi",
+  "version": "1.0.0",
+  "description": "Small service containing aan API and database hosted on AWS",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest tests"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.ts"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CameronAP/TypeScriptAWSAPI.git"
+  },
+  "keywords": [],
+  "author": "Cameron Purvis",
+  "license": "MIT",
+  "homepage": "https://github.com/CameronAP/TypeScriptAWSAPI#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.1136.0",
+    "@aws-sdk/lib-dynamodb": "3.1136.0",
+    "http-status-codes": "2.3.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.163",
+    "@types/jest": "30.0.0",
+    "@types/node": "26.6.2",
+    "aws-sdk-client-mock": "4.1.0",
+    "aws-sdk-client-mock-jest": "^4.1.0",
+    "jest": "30.5.2",
+    "ts-jest": "29.4.12",
+    "tsx": "4.23.13"
+  }
+}

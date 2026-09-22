@@ -1,0 +1,340 @@
+openapi: 3.2.0
+
+info:
+  title: Location API
+  summary: API for managing locations
+  version: 1.0.0
+  description: |
+    A simple API for creating, retrieving, updating, and deleting location records.
+    Requests must come with a provided api key. Contact support for more information.
+
+tags:
+  - name: Locations
+    description: Create, list, retrieve, update, and delete location records
+
+paths:
+
+  /locations:
+    get:
+      tags: [Locations]
+      summary: Lists location records for a given cursor position and limit
+      operationId: listLocationRecords
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of location records to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: cursor
+          description: id of latest position in elements 
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        "200":
+          description: Successfully retrieved locations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags: [Locations]
+      summary: Create a new location record
+      operationId: createLocationRecord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - name
+                - country
+                - region
+                - city
+              properties:
+                id:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - Branch123
+                name:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - Branch of 123
+                country:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - US
+                    - UK
+                region:
+                  type: string
+                  description: |
+                    The administrative region in which the city is located. 
+                    Due to limitations in OpenStreetMap's administrative hierarchy, 
+                    this must be the administrative region in which the city is located.
+                  minLength: 1
+                  examples:
+                    - Texas
+                    - Greater London
+                city:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - Houston
+                    - London
+      responses:
+        "201": 
+          description: Successfully created location
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /locations/{locationId}:
+    get:
+      tags: [Locations]
+      summary: Get a location record for a particular ID
+      operationId: getLocation
+      parameters:
+        - $ref: "#/components/parameters/locationId"
+      responses:
+        "200":
+          description: Successfully retrieved location for target id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError" 
+
+    patch:
+      tags: [Locations]
+      summary: Update existing location record
+      operationId: updateLocationRecord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - Branch of 123
+                country:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - US
+                    - UK
+                region:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - Texas
+                    - Greater London
+                city:
+                  type: string
+                  minLength: 1
+                  examples:
+                    - Houston
+                    - London
+      parameters:
+        - $ref: "#/components/parameters/locationId"
+      responses:
+        "200":
+          description: Successfully updated location
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    delete:
+      tags: [Locations]
+      summary: Delete a location record
+      operationId: deleteLocation
+      parameters:
+        - $ref: "#/components/parameters/locationId"
+      responses:
+        "204":
+          description: location has been deleted
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  parameters:
+    locationId:
+      name: locationId
+      in: path
+      required: true
+      description: Unique location identifier provided on record creation
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Invalid request format
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: INVALID_REQUEST
+            message: The request body or parameters are invalid
+    
+    Forbidden:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorNoCode"
+          example:
+            message: Forbidden
+    
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: LOCATION_RECORD_NOT_FOUND
+            message: Location with id "123" not found
+
+    Conflict:
+      description: A location with this id already exists
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: LOCATION_RECORD_ALREADY_EXISTS
+            message: A location with this id already exists
+
+    InternalServerError:
+      description: An unexpected error occurred on the server
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: INTERNAL_SERVER_ERROR
+            message: An unexpected error occurred. Please try again later.
+
+  schemas:
+    LocationRecord:
+      type: object
+      required: 
+        - id
+        - name
+        - latitude
+        - longitude
+        - country
+        - region
+        - city
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        country:
+          type: string
+        region:
+          type: string
+          description: State or county of the city
+        city:
+          type: string
+    LocationData:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/LocationRecord"
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Stable, machine-readable error identifier.
+          examples:
+            - LOCATION_RECORD_NOT_FOUND
+        message:
+          type: string
+          examples:
+            - Location with id "123" not found
+    ErrorNoCode:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          examples:
+            - Location with id "123" not found
+
+security:
+  - ApiKeyAuth: []

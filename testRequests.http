@@ -1,0 +1,62 @@
+@baseUrl = 
+@apiKey = 
+### Create Record - Wroughton
+POST {{baseUrl}}/locations
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+    "id": "UKBranch1",
+    "name": "Wroughton Branch 1",
+    "city": "Wroughton",
+    "region": "Swindon",
+    "country": "United Kingdom"
+}
+
+### Create Record - Dallas
+POST {{baseUrl}}/locations
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+    "id": "USBranch1",
+    "name": "Dallas Branch 1",
+    "city": "Dallas",
+    "region": "Texas",
+    "country": "United States"
+
+}
+
+### Update Record
+
+PATCH {{baseUrl}}/locations/USBranch1
+x-api-key: {{apiKey}}
+
+{
+    "name": "Houston Branch 1",
+    "city": "Houston"
+}
+
+### List Records
+GET {{baseUrl}}/locations
+x-api-key: {{apiKey}}
+
+### List Records with limit
+GET {{baseUrl}}/locations?limit=1
+x-api-key: {{apiKey}}
+
+### List Records with limit and cursor
+GET {{baseUrl}}/locations?limit=1&cursor=USBranch1
+x-api-key: {{apiKey}}
+
+### Get record
+GET {{baseUrl}}/locations/UKBranch1
+x-api-key: {{apiKey}}
+
+### Delete Record - UKBranch1
+DELETE  {{baseUrl}}/locations/UKBranch1
+x-api-key: {{apiKey}}
+
+### Delete Record - USBranch1
+DELETE  {{baseUrl}}/locations/USBranch1
+x-api-key: {{apiKey}}
