@@ -156,6 +156,7 @@ describe("DeleteLocation", () => {
 
         expect(res.statusCode).toBe(StatusCodes.NO_CONTENT)
     })
+    // Technically not possible with the current setup as only the DELETE endpoint with ID has been added to the API
     it("Should return Bad Request when no id is in the path", async () => {
         ddbMock.on(DeleteCommand).resolves(dbResponse(StatusCodes.OK))
         const event = makeEvent({})
@@ -352,6 +353,7 @@ describe("UpdateLocation", () => {
         
         expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST)
     })
+    // Technically not possible with the current setup as only the PATCH endpoint with ID has been added to the API
     it("Should return Bad Request on providing no id", async () => {
         const body = {
             name: "Test Name",
@@ -363,7 +365,7 @@ describe("UpdateLocation", () => {
         
         expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST)
     })
-    it("Should return Internal Server when an error occurs in updateRecord", async () => {
+    it("Should return Internal Server Error when an error occurs in updateRecord", async () => {
         const body = {
             name: "Test Name",
         }
