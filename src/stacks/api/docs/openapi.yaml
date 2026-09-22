@@ -30,6 +30,7 @@ paths:
             maximum: 100
             default: 10
         - name: cursor
+          in: query
           description: id of latest position in elements 
           required: false
           schema:
@@ -197,8 +198,6 @@ paths:
       responses:
         "204":
           description: location has been deleted
-        "400":
-          $ref: "#/components/responses/BadRequest"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":

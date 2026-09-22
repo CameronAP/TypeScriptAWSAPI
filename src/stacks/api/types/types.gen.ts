@@ -46,6 +46,10 @@ export type ListLocationRecordsData = {
          * Maximum number of location records to return
          */
         limit?: number;
+        /**
+         * id of latest position in elements
+         */
+        cursor?: number;
     };
     url: '/locations';
 };
